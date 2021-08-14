@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { BadRequestError } from '../errors/bad-request-error';
-import { User } from '../models/user';
+import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
+import { BadRequestError } from '../errors/bad-request-error';
+import { validationHandler } from '../middlewares/validation-handler';
+import { User } from '../models/user';
 
 if (!process.env.JWT_KEY) {
     throw new Error('JWT_KEY is not defined');
@@ -20,13 +20,8 @@ router.post(
             .isLength({ min: 4, max: 30 })
             .withMessage('Password length must be between 4 and 30 characters'),
     ],
+    validationHandler,
     async (req: Request, res: Response) => {
-        const result = validationResult(req);
-
-        if (!result.isEmpty()) {
-            throw new RequestValidationError(result.array());
-        }
-
         const { email, password } = req.body;
 
         const existingUser = await User.findOne({ email });
@@ -38,7 +33,10 @@ router.post(
         const user = User.build({ email, password });
         const savedUser = await user.save();
 
-        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_KEY!);
+        const token = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_KEY!
+        );
         req.session = {
             jwt: token,
         };
