@@ -3,6 +3,11 @@ import { body, validationResult } from 'express-validator';
 import { RequestValidationError } from '../errors/request-validation-error';
 import { BadRequestError } from '../errors/bad-request-error';
 import { User } from '../models/user';
+import jwt from 'jsonwebtoken';
+
+if (!process.env.JWT_KEY) {
+    throw new Error('JWT_KEY is not defined');
+}
 
 const router = express.Router();
 
@@ -32,6 +37,11 @@ router.post(
 
         const user = User.build({ email, password });
         const savedUser = await user.save();
+
+        const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_KEY!);
+        req.session = {
+            jwt: token,
+        };
 
         return res.status(201).send(savedUser);
     }

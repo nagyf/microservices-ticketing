@@ -1,16 +1,26 @@
+import cookieSession from 'cookie-session';
 import express from 'express';
 import 'express-async-errors'; // This needs to be before any other routes
 
+import mongoose from 'mongoose';
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middlewares/error-handler';
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
-import mongoose from 'mongoose';
 
 const app = express();
+app.set('trust proxy', true);
+
 app.use(express.json());
+app.use(
+    cookieSession({
+        signed: false,
+        secure: true,
+        httpOnly: true,
+    })
+);
 
 app.use(currentUserRouter);
 app.use(signinRouter);
@@ -26,6 +36,7 @@ app.use(errorHandler);
 const port = 3000;
 const start = async () => {
     try {
+        console.log('Connecting to MongoDB...');
         const mongoUrl = 'mongodb://auth-mongo-srv:27017/auth';
         await mongoose.connect(mongoUrl, {
             useNewUrlParser: true,
