@@ -7,7 +7,6 @@ export function validationHandler(
     res: Response,
     next: NextFunction
 ) {
-    console.log('Executing validation middleware');
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
