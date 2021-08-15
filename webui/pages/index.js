@@ -1,7 +1,11 @@
-export const index = () => {
-    return <div>
-        <h1>Landing page</h1>
-    </div>;
+export const LandingPage = ({ currentUser }) => {
+    const signedIn = !!currentUser;
+
+    return (
+        <div>
+            {signedIn ? <h1>Signed in</h1> : <h1>Not signed in</h1>}
+        </div>
+    );
 };
 
-export default index;
+export default LandingPage;
