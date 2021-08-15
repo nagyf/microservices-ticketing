@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Password } from '../services/password';
+import { PasswordUtils } from '../services/password-utils';
 
 interface UserProps {
     readonly email: string;
@@ -48,7 +48,7 @@ userSchema.pre('save', async function (done) {
     const user = this as UserDocument;
 
     if (user.isModified('password')) {
-        const hash = await Password.toHash(user.get('password'));
+        const hash = await PasswordUtils.toHash(user.get('password'));
         user.set('password', hash);
     }
 

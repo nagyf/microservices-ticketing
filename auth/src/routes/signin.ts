@@ -3,7 +3,7 @@ import { body } from 'express-validator';
 import { BadRequestError } from '../errors/bad-request-error';
 import { validationHandler } from '../middlewares/validation-handler';
 import { User } from '../models/user';
-import { Password } from '../services/password';
+import { PasswordUtils } from '../services/password-utils';
 import jwt from 'jsonwebtoken';
 import { AuthenticationError } from '../errors/authentication-error';
 
@@ -27,7 +27,7 @@ router.post(
             throw new AuthenticationError();
         }
 
-        const matchingPassword = await Password.compare(
+        const matchingPassword = await PasswordUtils.compare(
             existingUser.password,
             password
         );
