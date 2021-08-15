@@ -1,8 +1,10 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
-import { BadRequestError } from '../errors/bad-request-error';
-import { validationHandler } from '../middlewares/validation-handler';
+import {
+    BadRequestError,
+    validationHandler,
+} from '@microservices-course/ticketing-common';
 import { User } from '../models/user';
 
 if (!process.env.JWT_KEY) {

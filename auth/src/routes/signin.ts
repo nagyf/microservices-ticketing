@@ -1,11 +1,13 @@
 import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
-import { BadRequestError } from '../errors/bad-request-error';
-import { validationHandler } from '../middlewares/validation-handler';
+import {
+    BadRequestError,
+    validationHandler,
+    AuthenticationError,
+} from '@microservices-course/ticketing-common';
 import { User } from '../models/user';
 import { PasswordUtils } from '../services/password-utils';
 import jwt from 'jsonwebtoken';
-import { AuthenticationError } from '../errors/authentication-error';
 
 const router = express.Router();
 

@@ -2,8 +2,7 @@ import cookieSession from 'cookie-session';
 import express from 'express';
 import 'express-async-errors'; // This needs to be before any other routes
 
-import { NotFoundError } from './errors/not-found-error';
-import { errorHandler } from './middlewares/error-handler';
+import { NotFoundError, errorHandler } from '@microservices-course/ticketing-common';
 import { currentUserRouter } from './routes/current-user';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
